@@ -9,20 +9,16 @@ import redis.clients.jedis.Jedis;
 public class RedisStorage {
 
     //连接redis服务器 127.0.0.1:6379
-    private static Jedis jedis = new Jedis("127.0.0.1", 6379);
+    private static Jedis jedis = new Jedis("192.168.10.10", 6379);
 
     //权限认证
     //jedis.auth("admin");
     private RedisStorage() {
-
+//        jedis.auth("123456");
     }
 
-    public static  Jedis getInstance() {
-
+    public static Jedis getInstance() {
+//        jedis.auth("123456");
         return jedis;
-    }
-
-    public static void setProxyIp(HttpProxy httpProxy) {
-        jedis.set(httpProxy.getProxy().toString(), "me");
     }
 }

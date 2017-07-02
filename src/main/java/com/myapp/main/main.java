@@ -18,8 +18,6 @@ public class main implements Job {
     ProxyPool proxyPool = null;
 
 
-
-
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         proxyPool = Client.proxyPool;
