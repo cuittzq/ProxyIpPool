@@ -62,7 +62,8 @@ public class ProxyIpCheck {
             }
         }
 
-        Https.get(URLEncoder.encode(""));
+        String responces = Https.get(baseurl.toString()).request();
+        return null;
     }
 
 
