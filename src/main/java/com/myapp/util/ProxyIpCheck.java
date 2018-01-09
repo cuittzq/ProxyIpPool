@@ -61,7 +61,7 @@ public class ProxyIpCheck {
                 baseurl.append("&");
             }
         }
-
+        //{"ERRORCODE":"0","RESULT":[{"position":"中国 移动","port":"8080","time":"89ms","anony":"\"高匿\"","ip":"39.134.93.11"},{"position":"中国北京市北京市 电信","port":"3128","time":"3035ms","anony":"\"透明\"","ip":"116.196.119.138"},{"position":"中国安徽省芜湖市 电信","port":"8010","ip":"223.241.116.95"},{"position":"中国北京市北京市 阿里云","port":"3128","time":"236ms","anony":"\"透明\"","ip":"47.93.55.25"},{"position":"中国江苏省镇江市 电信","port":"9000","ip":"180.118.73.187"}]}
         String responces = Https.get(baseurl.toString()).request();
         return null;
     }
