@@ -19,7 +19,9 @@ public class ProxyIpCrawerImpl extends ProxyIpCrawer {
 
     @Override
     public void fetchProxyIp() {
+        System.out.println("开始爬取数据。。。。。");
         fetchProxyIpOnePage();
+        System.out.println("爬取完毕。。。。。");
     }
 
     public void fetchProxyIpOnePage() {

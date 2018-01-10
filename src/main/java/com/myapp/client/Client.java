@@ -7,14 +7,11 @@ import com.myapp.crawer.impl.ProxyIpCrawerImpl;
 import com.myapp.entity.ProxyIp;
 import com.myapp.proxy.ProxyPool;
 import com.myapp.redis.RedisStorage;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-
 import java.util.List;
-import java.util.TimerTask;
 
 /**
  * Created by gaorui on 16/12/26.

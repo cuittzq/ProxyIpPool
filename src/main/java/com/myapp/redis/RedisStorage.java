@@ -1,6 +1,5 @@
 package com.myapp.redis;
 
-import com.myapp.proxy.HttpProxy;
 import redis.clients.jedis.Jedis;
 
 /**

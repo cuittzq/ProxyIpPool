@@ -60,6 +60,7 @@ public class QuartzManager {
             sched.scheduleJob(jobDetail, trigger);
             // 启动
             if (!sched.isShutdown()) {
+              System.out.println("定时任务启动");
                 sched.start();
             }
         } catch (Exception e) {
