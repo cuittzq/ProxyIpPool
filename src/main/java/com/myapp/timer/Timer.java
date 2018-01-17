@@ -5,9 +5,9 @@ package com.myapp.timer;
  */
 
 
-import com.myapp.client.Client;
-import com.myapp.main.main;
-import com.myapp.redis.LoadMemory;
+import com.myapp.jobs.SpiderJob;
+import com.myapp.jobs.CheckJob;
+import com.myapp.jobs.LoadMemoryJob;
 
 
 public class Timer {
@@ -19,10 +19,10 @@ public class Timer {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        QuartzManager.addJob(job_name_1, Client.class, "0 0 * * * ?");
-//        Thread.sleep(1000 * 10);
-//        QuartzManager.addJob(job_name_2, main.class, "*/1 * * * * ?");
-//        QuartzManager.addJob(job_name_3, LoadMemory.class, "0 0 2 * * ?");
+        QuartzManager.addJob(job_name_1, SpiderJob.class, "0 0 * * * ?");
+        Thread.sleep(1000 * 10);
+        QuartzManager.addJob(job_name_2, CheckJob.class, "*/1 * * * * ?");
+        QuartzManager.addJob(job_name_3, LoadMemoryJob.class, "0 0 2 * * ?");
 
 
     }

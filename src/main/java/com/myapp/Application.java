@@ -1,6 +1,6 @@
 package com.myapp;
 
-import com.myapp.client.Client;
+import com.myapp.jobs.SpiderJob;
 import com.myapp.timer.QuartzManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +20,7 @@ public class Application extends SpringBootServletInitializer {
     final public static String job_name_3 = "task3_Redis";
 
     public static void main(String[] args) {
-        QuartzManager.addJob(job_name_1, Client.class, "0 0 * * * ?");
+        QuartzManager.addJob(job_name_1, SpiderJob.class, "0 0 * * * ?");
         SpringApplication.run(Application.class, args);
     }
 }

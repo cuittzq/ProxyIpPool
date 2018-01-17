@@ -1,18 +1,18 @@
 package com.myapp.proxy;
 
-import com.myapp.redis.RedisStorage;
 import com.myapp.util.HttpStatus;
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
-
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.DelayQueue;
 
 /**
  * Created by gaorui on 16/12/26.
  */
+@Log4j2
 public class ProxyPool {
 
 
@@ -82,7 +82,7 @@ public class ProxyPool {
             case SC_FORBIDDEN:
                 httpProxy.fail(httpStatus);
                 httpProxy.setReuseTimeInterval(HttpProxy.DEFAULT_REUSE_TIME_INTERVAL * (httpProxy.getFailedNum()+1)); // 被网站禁止，调节更长时间的访问频率
-//                logger.info(httpProxy.getProxy() + " >>>> reuseTimeInterval is >>>> " + TimeUnit.SECONDS.convert(httpProxy.getReuseTimeInterval(), TimeUnit.MILLISECONDS));
+//                logg.info(httpProxy.getProxy() + " >>>> reuseTimeInterval is >>>> " + TimeUnit.SECONDS.convert(httpProxy.getReuseTimeInterval(), TimeUnit.MILLISECONDS));
                 break;
             default:
                 httpProxy.fail(httpStatus);
