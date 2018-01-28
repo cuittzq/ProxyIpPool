@@ -15,7 +15,7 @@ public class TestController {
         try {
             result = RedisStorage.getInstance().rpop(rediskey);
         } catch (Exception ex) {
-            result = ex.getMessage();
+            System.out.println(ex.getMessage());
         }
 
         return result;

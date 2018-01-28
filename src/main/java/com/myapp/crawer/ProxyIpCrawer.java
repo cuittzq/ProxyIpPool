@@ -4,22 +4,20 @@ import com.myapp.entity.ProxyIp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by gaorui on 16/12/26.
  */
 public abstract class ProxyIpCrawer {
 
-    public List<ProxyIp> allProxyIps;// 解析页面获取的所有proxyip
-    public List<ProxyIp> workProxyIps;// 测试之后可用的 proxyip
+    public  ConcurrentSkipListSet<ProxyIp> workProxyIps = new  ConcurrentSkipListSet<ProxyIp>();// 测试之后可用的 proxyip
     public String notIp; // 测试时过滤掉的本机ip
     public String website;
 
     public ProxyIpCrawer(String website) {
         super();
         this.website = website;
-        this.allProxyIps = new ArrayList();
-        this.workProxyIps = new ArrayList();
     }
 
     /**

@@ -19,9 +19,9 @@ public class ProxyIpCrawerImpl extends ProxyIpCrawer {
 
     @Override
     public void fetchProxyIp() {
-        System.out.println("开始爬取数据。。。。。");
+        System.out.println("开始爬取" + this.website + "。。。。。");
         fetchProxyIpOnePage();
-        System.out.println("爬取完毕。。。。。");
+        System.out.println(this.website + "爬取完毕。。。。。");
     }
 
     public void fetchProxyIpOnePage() {
@@ -32,14 +32,19 @@ public class ProxyIpCrawerImpl extends ProxyIpCrawer {
         }
 
         ProxyIp proxyIp = null;
-        for (int i = 1; i < 50; i++) {
-            Elements tds = trs.get(i).select("td");
-            String ip = tds.get(0).text();
-            int port = Integer.parseInt(tds.get(1).text());
-            String desc = tds.get(2).text();// 描述：透明，高匿
-            String type = tds.get(3).text(); // http | https
-            String area = tds.get(5).text();// 地区
-            this.allProxyIps.add(new ProxyIp(ip, port, area, type));
+        for (int i = 1; i < 100; i++) {
+            try {
+                Elements tds = trs.get(i).select("td");
+                String ip = tds.get(0).text();
+                int port = Integer.parseInt(tds.get(1).text());
+                String desc = tds.get(2).text();// 描述：透明，高匿
+                String type = tds.get(3).text(); // http | https
+                String area = tds.get(5).text();// 地区
+                this.workProxyIps.add(new ProxyIp(ip, port, area, type));
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
         }
+
     }
 }
