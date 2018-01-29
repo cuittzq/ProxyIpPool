@@ -20,7 +20,7 @@ public class Application extends SpringBootServletInitializer {
     final public static String job_name_3 = "task3_Redis";
 
     public static void main(String[] args) {
-        QuartzManager.addJob(job_name_1, SpiderJob.class, "0 0 * * * ?");
+        QuartzManager.addJob(job_name_1, SpiderJob.class, "0 0/5 * * * ?");
         SpringApplication.run(Application.class, args);
     }
 }

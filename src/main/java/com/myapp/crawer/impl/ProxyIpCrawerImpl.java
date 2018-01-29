@@ -3,10 +3,7 @@ package com.myapp.crawer.impl;
 
 import com.myapp.crawer.ProxyIpCrawer;
 import com.myapp.entity.ProxyIp;
-import com.myapp.proxy.HttpProxy;
 import com.myapp.util.CrawerBase;
-import com.myapp.util.HttpStatus;
-import com.myapp.util.ProxyIpCheck;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -33,7 +30,7 @@ public class ProxyIpCrawerImpl extends ProxyIpCrawer {
         if (trs.size() <= 0) {
             return;
         }
-        for (int i = 1; i < 100; i++) {
+        for (int i = 1; i <= 100; i++) {
             try {
                 Elements tds     = trs.get(i).select("td");
                 String   ip      = tds.get(0).text();
@@ -42,10 +39,7 @@ public class ProxyIpCrawerImpl extends ProxyIpCrawer {
                 String   type    = tds.get(3).text(); // http | https
                 String   area    = tds.get(5).text();// 地区
                 ProxyIp  proxyIp = new ProxyIp(ip, port, area, type);
-                if (HttpStatus.SC_OK.getCode() == ProxyIpCheck.Check(new HttpProxy(proxyIp.getIp(), proxyIp.getPort()).getProxy()).getCode()) {
-                    this.workProxyIps.add(proxyIp);
-                }
-
+                workProxyIps.add(proxyIp);
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
