@@ -8,6 +8,7 @@ import com.myapp.crawer.impl.ProxyIpForkxdailiCrawerImpl;
 import com.myapp.entity.ProxyIp;
 import com.myapp.proxy.ProxyPool;
 import com.myapp.redis.RedisStorage;
+import com.myapp.util.ProxyIpCheck;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -20,11 +21,11 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 public class SpiderJob implements Job {
 
-    public ProxyIpCrawer proxyIpCrawerone = new ProxyIpCrawerImpl();
-    public ProxyIpCrawer proxyIpCrawerTow = new ProxyIpForkxdailiCrawerImpl();
-    private static int count = 0;
-    public ConcurrentSkipListSet<ProxyIp> allProxyIps = new ConcurrentSkipListSet<ProxyIp>();// 解析页面获取的所有proxyip
-    public static ProxyPool proxyPool = new ProxyPool();
+    public         ProxyIpCrawer                  proxyIpCrawerone = new ProxyIpCrawerImpl();
+    public         ProxyIpCrawer                  proxyIpCrawerTow = new ProxyIpForkxdailiCrawerImpl();
+    private static int                            count            = 0;
+    public static  ConcurrentSkipListSet<ProxyIp> allProxyIps      = new ConcurrentSkipListSet<ProxyIp>();// 解析页面获取的所有proxyip
+    public static  ProxyPool                      proxyPool        = new ProxyPool();
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -32,10 +33,11 @@ public class SpiderJob implements Job {
         System.out.println("#####第" + count + "次开始爬取#####");
         this.proxyIpCrawerone.fetchProxyIp();
         this.proxyIpCrawerTow.fetchProxyIp();
-        this.allProxyIps.addAll(proxyIpCrawerone.workProxyIps);
-        this.allProxyIps.addAll(proxyIpCrawerTow.workProxyIps);
+        allProxyIps.addAll(proxyIpCrawerone.workProxyIps);
+        allProxyIps.addAll(proxyIpCrawerTow.workProxyIps);
         long index = 0;
-        for (ProxyIp proxyip : this.allProxyIps) {
+
+        for (ProxyIp proxyip : allProxyIps) {
             try {
                 String rediskey = "ipproxy";
                 RedisStorage.getInstance().lpush(rediskey, Gson.class.newInstance().toJson(proxyip));

@@ -4,6 +4,7 @@ package com.myapp.crawer.impl;
 import com.myapp.crawer.ProxyIpCrawer;
 import com.myapp.entity.ProxyIp;
 import com.myapp.util.CrawerBase;
+import com.myapp.util.ProxyIpCheck;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -30,8 +31,6 @@ public class ProxyIpCrawerImpl extends ProxyIpCrawer {
         if (trs.size() <= 0) {
             return;
         }
-
-        ProxyIp proxyIp = null;
         for (int i = 1; i < 100; i++) {
             try {
                 Elements tds = trs.get(i).select("td");
@@ -45,6 +44,6 @@ public class ProxyIpCrawerImpl extends ProxyIpCrawer {
                 System.out.println(ex.getMessage());
             }
         }
-
+        this.workProxyIps = ProxyIpCheck.batchCheck(this.workProxyIps);
     }
 }
