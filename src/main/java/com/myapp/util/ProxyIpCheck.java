@@ -55,8 +55,6 @@ public class ProxyIpCheck {
 
     }
 
-    // http://www.xdaili.cn/ipagent//checkIp/ipList?ip_ports%5B%5D=39.134.93.11%3A8080&ip_ports%5B%5D=116.196.119.138%3A3128&ip_ports%5B%5D=223.241.116.95%3A8010&ip_ports%5B%5D=47.93.55.25%3A3128&ip_ports%5B%5D=180.118.73.187%3A9000
-    // http://www.xdaili.cn/ipagent//checkIp/ipList?ip_ports[]=39.134.93.11:8080&ip_ports[]=116.196.119.138:3128&ip_ports[]=223.241.116.95:8010&ip_ports[]=47.93.55.25:3128&ip_ports[]=180.118.73.187:9000
     public static ConcurrentSkipListSet<ProxyIp> batchCheck(ConcurrentSkipListSet<ProxyIp> iplist) {
         StringBuilder baseurl = new StringBuilder("http://www.xdaili.cn/ipagent//checkIp/ipList?");
         for (ProxyIp proxyIp : iplist) {
@@ -64,16 +62,25 @@ public class ProxyIpCheck {
             baseurl.append("&");
         }
         baseurl.deleteCharAt(baseurl.length() - 1);
-        String        responces = Https.get(baseurl.toString()).request();
-        ConcurrentSkipListSet<ProxyIp> proxyIps  = new ConcurrentSkipListSet<>();
-        Response      response  = JSON.parseObject(responces, Response.class);
-        if (response.getERRORCODE().equals("0")) {
-            if (response.getRESULT() != null) {
-                response.getRESULT().forEach(iPinfo -> {
-                    ProxyIp proxyIp = new ProxyIp(iPinfo.getIp(), Integer.parseInt(iPinfo.getPort()), iPinfo.getPosition(), iPinfo.getAnony());
-                    proxyIps.add(proxyIp);
-                });
+        ConcurrentSkipListSet<ProxyIp> proxyIps = new ConcurrentSkipListSet<>();
+        try {
+            String   responces = Https.get(baseurl.toString()).request();
+            Response response  = JSON.parseObject(responces, Response.class);
+            if (response.getERRORCODE().equals("0")) {
+                if (response.getRESULT() != null) {
+                    ConcurrentSkipListSet<ProxyIp> finalProxyIps = proxyIps;
+                    response.getRESULT().forEach(iPinfo -> {
+                        ProxyIp proxyIp = new ProxyIp(iPinfo.getIp(), Integer.parseInt(iPinfo.getPort()), iPinfo.getPosition(), iPinfo.getAnony());
+                        finalProxyIps.add(proxyIp);
+                    });
+                }
             }
+        } catch (Exception ex) {
+            return iplist;
+        }
+
+        if (proxyIps.size() == 0) {
+            proxyIps = iplist;
         }
         return proxyIps;
     }

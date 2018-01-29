@@ -37,24 +37,23 @@ public class SpiderJob implements Job {
         allProxyIps.addAll(proxyIpCrawerTow.workProxyIps);
         long index = 0;
 
-        for (ProxyIp proxyip : allProxyIps) {
-            try {
-                String rediskey = "ipproxy";
-                RedisStorage.getInstance().lpush(rediskey, Gson.class.newInstance().toJson(proxyip));
-                Thread.sleep(100);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            index++;
-        }
-        ConcurrentSkipListSet<ProxyIp> allProxyIps = this.allProxyIps;
+//        for (ProxyIp proxyip : allProxyIps) {
+//            try {
+//                String rediskey = "ipproxy";
+//                RedisStorage.getInstance().lpush(rediskey, Gson.class.newInstance().toJson(proxyip));
+//                Thread.sleep(100);
+//            } catch (InstantiationException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+//            index++;
+//        }
         for (ProxyIp Proxyip : allProxyIps) {
-            System.out.println("proxyPool:" + Proxyip.getIp() + ":" + Proxyip.getPort());
+            proxyPool.add(Proxyip.getIp(), Proxyip.getPort());
         }
 
         System.out.println("#####爬取并更新redis完毕#####");

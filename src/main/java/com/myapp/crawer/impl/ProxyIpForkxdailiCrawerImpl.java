@@ -2,7 +2,9 @@ package com.myapp.crawer.impl;
 
 import com.myapp.crawer.ProxyIpCrawer;
 import com.myapp.entity.ProxyIp;
+import com.myapp.proxy.HttpProxy;
 import com.myapp.util.CrawerBase;
+import com.myapp.util.HttpStatus;
 import com.myapp.util.ProxyIpCheck;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -36,13 +38,14 @@ public class ProxyIpForkxdailiCrawerImpl extends ProxyIpCrawer {
                     String   desc = tds.get(2).text();// 描述：透明，高匿
                     String   type = tds.get(3).text(); // http | https
                     String   area = tds.get(5).text();// 地区
-                    this.workProxyIps.add(new ProxyIp(ip, port, area, type));
+                    ProxyIp  proxyIp = new ProxyIp(ip, port, area, type);
+                    if (HttpStatus.SC_OK.getCode() == ProxyIpCheck.Check(new HttpProxy(proxyIp.getIp(), proxyIp.getPort()).getProxy()).getCode()) {
+                        this.workProxyIps.add(proxyIp);
+                    }
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                 }
             }
-
-            this.workProxyIps = ProxyIpCheck.batchCheck(this.workProxyIps);
         }
 
     }
