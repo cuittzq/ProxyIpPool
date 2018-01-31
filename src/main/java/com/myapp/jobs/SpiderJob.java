@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.myapp.crawer.ProxyIpCrawer;
 import com.myapp.crawer.impl.ProxyIpCrawerImpl;
 import com.myapp.crawer.impl.ProxyIpForkxdailiCrawerImpl;
+import com.myapp.crawer.impl.ProxyIpForxicidailiCrawerImpl;
 import com.myapp.entity.ProxyIp;
 import com.myapp.proxy.ProxyPool;
 import com.myapp.redis.RedisStorage;
@@ -22,30 +23,38 @@ import java.util.concurrent.Executors;
  */
 public class SpiderJob implements Job {
 
-    public         ProxyIpCrawer                  proxyIpCrawerone = new ProxyIpCrawerImpl();
-    public         ProxyIpCrawer                  proxyIpCrawerTow = new ProxyIpForkxdailiCrawerImpl();
-    private static int                            count            = 0;
-    public static  ConcurrentSkipListSet<ProxyIp> allProxyIps      = new ConcurrentSkipListSet<ProxyIp>();// 解析页面获取的所有proxyip
+
+    private static int count = 0;
+
+    private final int                            CRAWERTHREAD = 3;
+    private final int                            WORKTHREAD   = 10;
+    public static ConcurrentSkipListSet<ProxyIp> allProxyIps  = new ConcurrentSkipListSet<ProxyIp>();// 解析页面获取的所有proxyip
 
     public static ProxyPool proxyPool = new ProxyPool();
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        count++;
         System.out.println("#####第" + count + "次开始爬取#####");
-        this.proxyIpCrawerone.fetchProxyIp();
-        this.proxyIpCrawerTow.fetchProxyIp();
-        allProxyIps.addAll(proxyIpCrawerone.workProxyIps);
-        allProxyIps.addAll(proxyIpCrawerTow.workProxyIps);
-
-        final CountDownLatch           countDownLatch   = new CountDownLatch(allProxyIps.size());
-        ExecutorService                cachedThreadPool = Executors.newCachedThreadPool();
-        ConcurrentSkipListSet<ProxyIp> checkProxyIps    = new ConcurrentSkipListSet<>();
+        ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
         try {
-            for (ProxyIp proxyIp : allProxyIps) {
-                cachedThreadPool.execute(new CheckThread(proxyIp, checkProxyIps, countDownLatch));
+            final CountDownLatch crawercountDownLatch = new CountDownLatch(CRAWERTHREAD);
+            cachedThreadPool.execute(new ProxyIpCrawerImpl(crawercountDownLatch));
+            cachedThreadPool.execute(new ProxyIpForkxdailiCrawerImpl(crawercountDownLatch));
+            cachedThreadPool.execute(new ProxyIpForxicidailiCrawerImpl(crawercountDownLatch));
+            crawercountDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        final CountDownLatch           countDownLatch = new CountDownLatch(WORKTHREAD);
+        ConcurrentSkipListSet<ProxyIp> checkProxyIps  = new ConcurrentSkipListSet<>();
+        try {
+            Long start = System.currentTimeMillis();
+            for (int i = 0; i < WORKTHREAD; i++) {
+                cachedThreadPool.execute(new CheckThread("线程" + i, checkProxyIps, ProxyIpCrawer.workProxyIps, countDownLatch));
             }
             countDownLatch.await();
+            System.out.println(String.format("校验IP耗时%d", System.currentTimeMillis() - start));
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -54,25 +63,26 @@ public class SpiderJob implements Job {
         if (checkProxyIps.size() > 0) {
             allProxyIps = checkProxyIps;
         }
-        for (ProxyIp proxyip : allProxyIps) {
-            try {
-                String rediskey = "ipproxy";
-                RedisStorage.getInstance().lpush(rediskey, Gson.class.newInstance().toJson(proxyip));
-                Thread.sleep(100);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        for (ProxyIp proxyip : allProxyIps) {
+//            try {
+//                String rediskey = "ipproxy";
+//                RedisStorage.getInstance().lpush(rediskey, Gson.class.newInstance().toJson(proxyip));
+//                Thread.sleep(100);
+//            } catch (InstantiationException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
 
         for (ProxyIp Proxyip : allProxyIps) {
             proxyPool.add(Proxyip.getIp(), Proxyip.getPort());
         }
 
-        System.out.println("#####爬取并更新redis完毕#####");
+        System.out.println("#####爬取并更新redis完毕,共" + allProxyIps.size() + "个IP#####");
+        count++;
     }
 }

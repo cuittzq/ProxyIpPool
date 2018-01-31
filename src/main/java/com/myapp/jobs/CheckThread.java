@@ -18,15 +18,19 @@ import java.util.concurrent.CountDownLatch;
  */
 public class CheckThread implements Runnable {
 
-    private ProxyIp proxyIp;
+    private CountDownLatch countDownLatch;
 
     private ConcurrentSkipListSet<ProxyIp> allProxyIps;
-    private CountDownLatch                 countDownLatch;
 
-    public CheckThread(ProxyIp proxyIp, ConcurrentSkipListSet<ProxyIp> allProxyIps, CountDownLatch countDownLatch) {
-        this.proxyIp = proxyIp;
+    public ConcurrentSkipListSet<ProxyIp> workProxyIps;
+
+    private String threadName;
+
+    public CheckThread(String threadName, ConcurrentSkipListSet<ProxyIp> allProxyIps, ConcurrentSkipListSet<ProxyIp> workProxyIps, CountDownLatch countDownLatch) {
         this.allProxyIps = allProxyIps;
         this.countDownLatch = countDownLatch;
+        this.workProxyIps = workProxyIps;
+        this.threadName = threadName;
     }
 
     /**
@@ -42,15 +46,22 @@ public class CheckThread implements Runnable {
      */
     @Override
     public void run() {
-        try {
-            if (HttpStatus.SC_OK.getCode() == ProxyIpCheck.Check(new HttpProxy(proxyIp.getIp(), proxyIp.getPort()).getProxy()).getCode()) {
-                this.allProxyIps.add(proxyIp);
-            }
-        } catch (Exception ex) {
+        while (!workProxyIps.isEmpty()) {
+            try {
+                System.out.println(threadName + "-------" + workProxyIps.size());
+                ProxyIp proxyIp = workProxyIps.pollLast();
+                if (proxyIp == null) {
+                    break;
+                }
+                if (HttpStatus.SC_OK.getCode() == ProxyIpCheck.Check(new HttpProxy(proxyIp.getIp(), proxyIp.getPort()).getProxy()).getCode()) {
+                    this.allProxyIps.add(proxyIp);
+                }
+            } catch (Exception ex) {
 
-        } finally {
-            this.countDownLatch.countDown();
-            System.out.println(this.countDownLatch.getCount());
+            }
         }
+
+        this.countDownLatch.countDown();
+        System.out.println(this.countDownLatch.getCount());
     }
 }
