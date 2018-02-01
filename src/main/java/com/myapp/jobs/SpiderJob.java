@@ -27,7 +27,7 @@ public class SpiderJob implements Job {
     private static int count = 0;
 
     private final int                            CRAWERTHREAD = 3;
-    private final int                            WORKTHREAD   = 10;
+    private final int                            WORKTHREAD   = 100;
     public static ConcurrentSkipListSet<ProxyIp> allProxyIps  = new ConcurrentSkipListSet<ProxyIp>();// 解析页面获取的所有proxyip
 
     public static ProxyPool proxyPool = new ProxyPool();
