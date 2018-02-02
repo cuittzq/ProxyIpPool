@@ -19,6 +19,7 @@ public class ProxyIpForkxdailiCrawerImpl extends ProxyIpCrawer {
 
     public void fetchProxyIpOnePage() {
         for (int k = 0; k < 10; k++) {
+            System.out.println("开始爬取" + String.format(this.website, k + 1) + "。。。。。");
             Document doc = CrawerBase.get(String.format(this.website, k + 1));
             Elements trs = doc.select("table").select("tr");
             if (trs.size() <= 0) {
@@ -34,10 +35,17 @@ public class ProxyIpForkxdailiCrawerImpl extends ProxyIpCrawer {
                     String   type    = tds.get(3).text(); // http | https
                     String   area    = tds.get(5).text();// 地区
                     ProxyIp  proxyIp = new ProxyIp(ip, port, area, type);
-                    this.workProxyIps.add(proxyIp);
+                    ProxyIpCrawer.workProxyIps.add(proxyIp);
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                 }
+            }
+
+            System.out.println(String.format(this.website, k + 1)+ "爬取完毕。。。。。");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
@@ -57,9 +65,9 @@ public class ProxyIpForkxdailiCrawerImpl extends ProxyIpCrawer {
     @Override
     public void run() {
         try {
-            System.out.println("开始爬取" + this.website + "。。。。。");
+
             fetchProxyIpOnePage();
-            System.out.println(this.website + "爬取完毕。。。。。");
+
         } catch (Exception ex) {
 
         } finally {

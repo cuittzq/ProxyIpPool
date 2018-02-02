@@ -4,6 +4,7 @@ package com.myapp.jobs;
 import com.google.gson.Gson;
 import com.myapp.crawer.ProxyIpCrawer;
 import com.myapp.crawer.impl.ProxyIpCrawerImpl;
+import com.myapp.crawer.impl.ProxyIpForData5UCrawerImpl;
 import com.myapp.crawer.impl.ProxyIpForkxdailiCrawerImpl;
 import com.myapp.crawer.impl.ProxyIpForxicidailiCrawerImpl;
 import com.myapp.entity.ProxyIp;
@@ -26,7 +27,7 @@ public class SpiderJob implements Job {
 
     private static int count = 0;
 
-    private final int                            CRAWERTHREAD = 3;
+    private final int                            CRAWERTHREAD = 4;
     private final int                            WORKTHREAD   = 100;
     public static ConcurrentSkipListSet<ProxyIp> allProxyIps  = new ConcurrentSkipListSet<ProxyIp>();// 解析页面获取的所有proxyip
 
@@ -41,6 +42,7 @@ public class SpiderJob implements Job {
             cachedThreadPool.execute(new ProxyIpCrawerImpl(crawercountDownLatch));
             cachedThreadPool.execute(new ProxyIpForkxdailiCrawerImpl(crawercountDownLatch));
             cachedThreadPool.execute(new ProxyIpForxicidailiCrawerImpl(crawercountDownLatch));
+            cachedThreadPool.execute(new ProxyIpForData5UCrawerImpl(crawercountDownLatch));
             crawercountDownLatch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
