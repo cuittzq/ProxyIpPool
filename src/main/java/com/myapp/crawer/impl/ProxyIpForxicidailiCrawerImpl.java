@@ -18,13 +18,13 @@ import java.util.concurrent.CountDownLatch;
  */
 public class ProxyIpForxicidailiCrawerImpl extends ProxyIpCrawer {
 
-    private CountDownLatch countDownLatch;
 
     public ProxyIpForxicidailiCrawerImpl(CountDownLatch countDownLatch) {
         super("http://www.xicidaili.com/wn/%d");
         this.countDownLatch = countDownLatch;
     }
 
+    @Override
     public void fetchProxyIpOnePage() {
         int count = 10;
         for (int j = 1; j < 100; j++) {
@@ -68,30 +68,5 @@ public class ProxyIpForxicidailiCrawerImpl extends ProxyIpCrawer {
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
-     * <code>run</code> method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method <code>run</code> is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
-    @Override
-    public void run() {
-        try {
-
-            fetchProxyIpOnePage();
-
-        } catch (Exception ex) {
-
-        } finally {
-            this.countDownLatch.countDown();
-        }
-
     }
 }

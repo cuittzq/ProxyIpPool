@@ -21,7 +21,6 @@ import java.util.concurrent.CountDownLatch;
 public class ProxyIpForData5UCrawerImpl extends ProxyIpCrawer {
 
     private List<String> websites = new ArrayList<>();
-    private CountDownLatch countDownLatch;
 
     public ProxyIpForData5UCrawerImpl(CountDownLatch countDownLatch) {
         super("http://www.data5u.com/free/index.shtml");
@@ -33,6 +32,7 @@ public class ProxyIpForData5UCrawerImpl extends ProxyIpCrawer {
         this.countDownLatch = countDownLatch;
     }
 
+    @Override
     public void fetchProxyIpOnePage() {
         websites.forEach(web->{
             System.out.println("开始爬取" + web+ "。。。。。");
@@ -65,30 +65,5 @@ public class ProxyIpForData5UCrawerImpl extends ProxyIpCrawer {
                 e.printStackTrace();
             }
         });
-    }
-
-    /**
-     * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
-     * <code>run</code> method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method <code>run</code> is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
-    @Override
-    public void run() {
-        try {
-
-            fetchProxyIpOnePage();
-
-        } catch (Exception ex) {
-
-        } finally {
-            this.countDownLatch.countDown();
-        }
-
     }
 }

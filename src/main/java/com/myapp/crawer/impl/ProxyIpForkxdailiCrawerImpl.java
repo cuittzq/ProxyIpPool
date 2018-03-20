@@ -3,6 +3,7 @@ package com.myapp.crawer.impl;
 import com.myapp.crawer.ProxyIpCrawer;
 import com.myapp.entity.ProxyIp;
 import com.myapp.util.CrawerBase;
+import lombok.Builder;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -10,13 +11,14 @@ import java.util.concurrent.CountDownLatch;
 
 public class ProxyIpForkxdailiCrawerImpl extends ProxyIpCrawer {
 
-    private CountDownLatch countDownLatch;
+
 
     public ProxyIpForkxdailiCrawerImpl(CountDownLatch countDownLatch) {
         super("http://www.kxdaili.com/dailiip/2/%d.html");
         this.countDownLatch = countDownLatch;
     }
 
+    @Override
     public void fetchProxyIpOnePage() {
         for (int k = 0; k < 10; k++) {
             System.out.println("开始爬取" + String.format(this.website, k + 1) + "。。。。。");
@@ -47,31 +49,6 @@ public class ProxyIpForkxdailiCrawerImpl extends ProxyIpCrawer {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-
-    }
-
-    /**
-     * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
-     * <code>run</code> method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method <code>run</code> is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
-    @Override
-    public void run() {
-        try {
-
-            fetchProxyIpOnePage();
-
-        } catch (Exception ex) {
-
-        } finally {
-            this.countDownLatch.countDown();
         }
 
     }
