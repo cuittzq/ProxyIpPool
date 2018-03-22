@@ -65,19 +65,21 @@ public class SpiderJob implements Job {
         if (checkProxyIps.size() > 0) {
             allProxyIps = checkProxyIps;
         }
-//        for (ProxyIp proxyip : allProxyIps) {
-//            try {
-//                String rediskey = "ipproxy";
-//                RedisStorage.getInstance().lpush(rediskey, Gson.class.newInstance().toJson(proxyip));
-//                Thread.sleep(100);
-//            } catch (InstantiationException e) {
-//                e.printStackTrace();
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+
+
+        for (ProxyIp proxyip : allProxyIps) {
+            try {
+                String rediskey = "ipproxy";
+                RedisStorage.getInstance().lpush(rediskey, Gson.class.newInstance().toJson(proxyip));
+                Thread.sleep(100);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
 
         for (ProxyIp Proxyip : allProxyIps) {
