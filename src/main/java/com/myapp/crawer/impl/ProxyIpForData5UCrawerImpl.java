@@ -5,10 +5,10 @@ import com.myapp.entity.ProxyIp;
 import com.myapp.util.CrawerBase;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * 功能描述
@@ -18,26 +18,26 @@ import java.util.concurrent.CountDownLatch;
  * LY.com Inc.
  * Copyright (c) 2004-2017 All Rights Reserved.
  */
+@Service("proxyIpForData5UCrawer")
 public class ProxyIpForData5UCrawerImpl extends ProxyIpCrawer {
 
     private List<String> websites = new ArrayList<>();
 
-    public ProxyIpForData5UCrawerImpl(CountDownLatch countDownLatch) {
+    public ProxyIpForData5UCrawerImpl() {
         super("http://www.data5u.com/free/index.shtml");
         websites.add(this.website);
         websites.add("http://www.data5u.com/free/gngn/index.shtml");
         websites.add("http://www.data5u.com/free/gnpt/index.shtml");
         websites.add("http://www.data5u.com/free/gwgn/index.shtml");
         websites.add("http://www.data5u.com/free/gwpt/index.shtml");
-        this.countDownLatch = countDownLatch;
     }
 
     @Override
     public void fetchProxyIpOnePage() {
-        websites.forEach(web->{
-            System.out.println("开始爬取" + web+ "。。。。。");
-            Document doc   = CrawerBase.get(web);
-            Elements trs   = doc.select("li").addClass("text-align:center;").select("ul");
+        websites.forEach(web -> {
+            System.out.println("开始爬取" + web + "。。。。。");
+            Document doc = CrawerBase.get(web);
+            Elements trs = doc.select("li").addClass("text-align:center;").select("ul");
             if (trs.size() <= 0) {
                 return;
             }

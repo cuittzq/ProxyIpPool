@@ -13,7 +13,6 @@ import java.util.concurrent.CountDownLatch;
 public abstract class ProxyIpCrawer implements Runnable {
 
     public static ConcurrentSkipListSet<ProxyIp> workProxyIps = new ConcurrentSkipListSet<ProxyIp>();// 测试之后可用的 proxyip
-    public    String         notIp; // 测试时过滤掉的本机ip
     public    String         website;
     protected CountDownLatch countDownLatch;
 
@@ -22,19 +21,7 @@ public abstract class ProxyIpCrawer implements Runnable {
         this.website = website;
     }
 
-    /**
-     * 从数据库加载代理ip ,
-     */
-    public void loadDB() {
-        /* 数据库 使用 Ip+port两个字段作为 主键 限制重复 */
-    }
 
-    /**
-     * workProxyIps 存入数据库
-     */
-    public void persistWorkProxyIpsDB() {
-
-    }
 
     /**
      * When an object implementing interface <code>Runnable</code> is used
@@ -60,4 +47,28 @@ public abstract class ProxyIpCrawer implements Runnable {
     }
 
     public abstract void fetchProxyIpOnePage();
+
+    public CountDownLatch getCountDownLatch() {
+        return countDownLatch;
+    }
+
+    public void setCountDownLatch(CountDownLatch countDownLatch) {
+        this.countDownLatch = countDownLatch;
+    }
+
+    public static ConcurrentSkipListSet<ProxyIp> getWorkProxyIps() {
+        return workProxyIps;
+    }
+
+    public static void setWorkProxyIps(ConcurrentSkipListSet<ProxyIp> workProxyIps) {
+        ProxyIpCrawer.workProxyIps = workProxyIps;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 }

@@ -3,19 +3,15 @@ package com.myapp.crawer.impl;
 import com.myapp.crawer.ProxyIpCrawer;
 import com.myapp.entity.ProxyIp;
 import com.myapp.util.CrawerBase;
-import lombok.Builder;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
-import java.util.concurrent.CountDownLatch;
-
+@Service("proxyIpForkxdailiCrawer")
 public class ProxyIpForkxdailiCrawerImpl extends ProxyIpCrawer {
 
-
-
-    public ProxyIpForkxdailiCrawerImpl(CountDownLatch countDownLatch) {
+    public ProxyIpForkxdailiCrawerImpl() {
         super("http://www.kxdaili.com/dailiip/2/%d.html");
-        this.countDownLatch = countDownLatch;
     }
 
     @Override
@@ -43,7 +39,7 @@ public class ProxyIpForkxdailiCrawerImpl extends ProxyIpCrawer {
                 }
             }
 
-            System.out.println(String.format(this.website, k + 1)+ "爬取完毕。。。。。");
+            System.out.println(String.format(this.website, k + 1) + "爬取完毕。。。。。");
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {

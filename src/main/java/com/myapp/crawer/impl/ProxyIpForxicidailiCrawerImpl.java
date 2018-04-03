@@ -5,6 +5,7 @@ import com.myapp.entity.ProxyIp;
 import com.myapp.util.CrawerBase;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -16,12 +17,11 @@ import java.util.concurrent.CountDownLatch;
  * LY.com Inc.
  * Copyright (c) 2004-2017 All Rights Reserved.
  */
+@Service("proxyIpForxicidailiCrawer")
 public class ProxyIpForxicidailiCrawerImpl extends ProxyIpCrawer {
 
-
-    public ProxyIpForxicidailiCrawerImpl(CountDownLatch countDownLatch) {
+    public ProxyIpForxicidailiCrawerImpl() {
         super("http://www.xicidaili.com/wn/%d");
-        this.countDownLatch = countDownLatch;
     }
 
     @Override

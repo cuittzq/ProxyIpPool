@@ -2,6 +2,7 @@ package com.myapp.proxy;
 
 import com.myapp.util.HttpStatus;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -13,11 +14,18 @@ import java.util.concurrent.DelayQueue;
  * Created by gaorui on 16/12/26.
  */
 @Log4j2
+@Service
 public class ProxyPool {
 
 
-    private BlockingQueue<HttpProxy> idleQueue = new DelayQueue<HttpProxy>(); // 存储空闲的Proxy
-    private Map<String, HttpProxy> totalQueue = new ConcurrentHashMap<String, HttpProxy>(); // 存储所有的Proxy
+    /**
+     * 存储空闲的Proxy
+     */
+    private BlockingQueue<HttpProxy> idleQueue = new DelayQueue<HttpProxy>();
+    /**
+     * 存储所有的Proxy
+     */
+    private Map<String, HttpProxy> totalQueue = new ConcurrentHashMap<String, HttpProxy>();
 
 
     /**

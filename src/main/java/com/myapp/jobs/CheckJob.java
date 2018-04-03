@@ -8,16 +8,18 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import javax.annotation.Resource;
+
 /**
  * Created by gaorui on 16/12/28.
  */
 public class CheckJob implements Job {
-    ProxyPool proxyPool = null;
+    @Resource
+    public ProxyPool proxyPool;
 
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        proxyPool = SpiderJob.proxyPool;
         System.out.println("#####爬虫ip池开始测试#####");
         int idleNum = proxyPool.getIdleNum();
         for (int i = 0; i < idleNum; i++) {

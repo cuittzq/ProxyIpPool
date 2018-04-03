@@ -7,6 +7,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import redis.clients.jedis.Jedis;
 
+import javax.annotation.Resource;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -15,7 +16,8 @@ import java.util.Set;
  */
 public class LoadMemoryJob implements Job {
 
-
+    @Resource
+    public ProxyPool proxyPool;
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 //        QuartzManager.pauseTrigger(Timer.job_name_2);
@@ -23,7 +25,6 @@ public class LoadMemoryJob implements Job {
         Set<String> set = jedis.keys("*");
 
         Iterator iterator = set.iterator();
-        ProxyPool proxyPool = SpiderJob.proxyPool;
         while (iterator.hasNext()) {
             String proxyIp = iterator.next().toString().substring(8).split(":")[0];
             int proxyPort = Integer.valueOf(iterator.next().toString().substring(8).split(":")[1]);
